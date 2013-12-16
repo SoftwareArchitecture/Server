@@ -11,6 +11,13 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
+        
+        <dependency>
+            <groupId>at.ac.tuwien.softwareArchitecture.SWAzam</groupId>
+            <artifactId>Common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     
     </dependencies>
 
