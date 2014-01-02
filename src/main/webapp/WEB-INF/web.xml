@@ -8,5 +8,15 @@
     </session-config>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
-        </welcome-file-list>
-    </web-app>
+    </welcome-file-list>
+    <servlet>
+	    <description></description>
+	    <display-name>UserController</display-name>
+	    <servlet-name>UserController</servlet-name>
+	    <servlet-class>src.main.swazam.controller.AccountController</servlet-class>
+  	</servlet>
+  	<servlet-mapping>
+    	<servlet-name>UserController</servlet-name>
+    	<url-pattern>/UserController</url-pattern>
+ 	 </servlet-mapping>
+</web-app>
