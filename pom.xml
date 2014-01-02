@@ -12,12 +12,18 @@
 
     <dependencies>
         
+
         <dependency>
-            <groupId>at.ac.tuwien.softwareArchitecture.SWAzam</groupId>
-            <artifactId>Common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.27</version>
+		</dependency>
+        <dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>1.18</version>
+		</dependency>
+		            
     
     </dependencies>
 
