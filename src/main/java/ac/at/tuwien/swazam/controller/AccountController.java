@@ -1,8 +1,11 @@
-package src.main.swazam.controller;
+package ac.at.tuwien.swazam.controller;
+
+import java.io.IOException;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class AccountController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -15,7 +18,7 @@ public class AccountController extends HttpServlet {
         	// return list of accounts
         	request.setAttribute("accounts", "");
         }
-        else (action.equalsIgnoreCase("accountid")) {
+        else if(action.equalsIgnoreCase("accountid")) {
         	forward = "/account.jsp";
         	int userId = Integer.parseInt(request.getParameter("accountId"));
             //Get accountid from dao

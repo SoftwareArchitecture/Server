@@ -1,6 +1,13 @@
-package src.main.swazam.dao;
+package ac.at.tuwien.swazam.dao;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import com.mysql.jdbc.Statement;
 
 public class DBAccess {
 	private Connection connect = null;
@@ -9,9 +16,14 @@ public class DBAccess {
     private final String PASSWORD = "";
     private String INSTRUCTIONS = new String();
 
-    public static Connection getConnection() throws SQLException
+    public Connection getConnection() throws SQLException
     {
-    	Class.forName("com.mysql.jdbc.Driver");
+    	try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 	
@@ -36,8 +48,8 @@ public class DBAccess {
 	            // then we are sure to have well formed statements
 	            String[] inst = sb.toString().split(";");
 
-	            Connection c = Database.getConnection();
-	            Statement st = c.createStatement();
+	            Connection c = getConnection();
+	            Statement st = (Statement) c.createStatement();
 
 	            for(int i = 0; i<inst.length; i++)
 	            {
