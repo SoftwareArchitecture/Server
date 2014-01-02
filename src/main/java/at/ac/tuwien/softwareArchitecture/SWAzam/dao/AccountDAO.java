@@ -1,9 +1,9 @@
-package ac.at.tuwien.swazam.dao;
+package at.ac.tuwien.softwareArchitecture.SWAzam.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ac.at.tuwien.swazam.model.Account;
+import at.ac.tuwien.softwareArchitecture.SWAzam.model.Account;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;

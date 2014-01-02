@@ -1,4 +1,4 @@
-package ac.at.tuwien.swazam.dao;
+package at.ac.tuwien.softwareArchitecture.SWAzam.dao;
 
 import java.io.BufferedReader;
 import java.io.File;
