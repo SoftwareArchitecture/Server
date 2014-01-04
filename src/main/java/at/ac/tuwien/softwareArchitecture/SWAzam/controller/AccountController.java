@@ -3,12 +3,12 @@ package at.ac.tuwien.softwareArchitecture.SWAzam.controller;
 import java.io.Serializable;
 import java.util.Map;
 
-
+/*
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-
+*/
 import at.ac.tuwien.softwareArchitecture.SWAzam.model.Account;
 
 //@ManagedBean(name="accounts")
@@ -35,7 +35,7 @@ public class AccountController implements Serializable {
 		this.password = password;
 	}
 
-	@ManagedProperty(value = "#{param.password}")
+	//@ManagedProperty(value = "#{param.password}")
     private String password;
 	
 	public Account getAccountByUsername() {

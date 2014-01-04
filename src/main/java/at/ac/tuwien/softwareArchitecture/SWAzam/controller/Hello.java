@@ -1,10 +1,11 @@
 package at.ac.tuwien.softwareArchitecture.SWAzam.controller;
-
+/*
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+*/
 
-@ManagedBean
-@RequestScoped
+//@ManagedBean
+//@RequestScoped
 public class Hello {
 
     private String name;
