@@ -11,7 +11,7 @@ public class SearchManagementService {
 
 	@GET @Path("search")
     @Produces({MediaType.TEXT_PLAIN})
-	public String search(@QueryParam("username") String Username, @QueryParam("password") String Password, @QueryParam("fingerprint") ac.at.tuwien.infosys.swa.audio.Fingerprint Fingerprint) {
+	public String search(@QueryParam("username") String Username, @QueryParam("password") String Password, @QueryParam("fingerprint") String Fingerprint) {
 		
 		return "";
 	}
