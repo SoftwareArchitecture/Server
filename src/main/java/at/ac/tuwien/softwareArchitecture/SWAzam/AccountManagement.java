@@ -1,5 +1,7 @@
 package at.ac.tuwien.softwareArchitecture.SWAzam;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import at.ac.tuwien.softwareArchitecture.SWAzam.Database.AccountDAO;
@@ -17,23 +19,63 @@ public class AccountManagement {
 		return retList;
 	}
 	
-	public static boolean insertAccount(String Username, String Password, String Firstname, String Lastname) {
+	public static boolean insertAccount(String Username, String Password, String Firstname, String Lastname, String SessionKey) {
 		Account insAccount = new Account();
 		insAccount.setFirstname(Firstname);
 		insAccount.setLastname(Lastname);
 		insAccount.setUsername(Username);
 		insAccount.setPassword(Password);
 		
-		return accountdao.save(insAccount);
+		if (isLoggedin(insAccount.getId(), SessionKey)) {
+			return accountdao.save(insAccount);
+		}
+		else {
+			return false;
+		}
 	}
 	
-	public static boolean deleteAccount(int id) {
+	public static boolean deleteAccount(int id, String SessionKey) {
 		Account delAccount = new Account();
 		delAccount.setId(id);
-		return accountdao.delete(delAccount);
+		
+		if (isLoggedin(delAccount.getId(), SessionKey)) {
+			return accountdao.delete(delAccount);
+		}
+		else {
+			return false;
+		}
 	}
 	
-	public static boolean updateAccount(int id, String Username, String Password, String Firstname, String Lastname) {
+	private static boolean isLoggedin(int id, String sessionkey) {
+		Account logAccount = accountdao.findByAccountNumber(id);
+		 
+		Date d1 = null;
+		Date d2 = null;
+		Calendar cal = Calendar.getInstance();
+		
+		try {
+			d1 = logAccount.getSessiondate();
+			d2 = cal.getTime();
+			
+			System.out.println("Account Session Date: " + d1.getTime());
+			System.out.println("Time Now: " + d2.getTime());
+			
+			long diff = d2.getTime() - d1.getTime();
+			long diffMinutes = diff / (60 * 1000) % 60;
+			
+			if(logAccount.getSessionkey() == sessionkey && diffMinutes > 20) {
+				System.out.println("Session Timeout!");
+				return false;
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public static boolean updateAccount(int id, String Username, String Password, String Firstname, String Lastname, String SessionKey) {
 		Account updAccount = new Account();
 		updAccount.setId(id);
 		if (Username != null) {
@@ -51,7 +93,12 @@ public class AccountManagement {
 		if(Lastname != null) {
 			updAccount.setLastname(Lastname);
 		}
-		return accountdao.update(updAccount);
+		
+		if (isLoggedin(updAccount.getId(), SessionKey)) { 
+			return accountdao.update(updAccount);
+		} else {
+			return false;
+		}
 	}
 	
 	public static Account login(String Username, String Password) {

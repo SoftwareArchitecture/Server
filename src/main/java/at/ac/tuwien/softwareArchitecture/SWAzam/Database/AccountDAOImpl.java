@@ -140,6 +140,8 @@ public class AccountDAOImpl implements AccountDAO {
 				account.setLastname(rs.getString("lastname"));
 				account.setUsername(rs.getString("username"));
 				account.setPassword(rs.getString("password"));
+				account.setSessiondate(rs.getDate("sessiondate"));
+				account.setSessionkey(rs.getString("sessionkey"));
 				account.setCoin(rs.getInt("coin"));
 			}
 			if(count == 1) {
@@ -214,6 +216,8 @@ public class AccountDAOImpl implements AccountDAO {
 				account.setLastname(rs.getString("lastname"));
 				account.setUsername(rs.getString("username"));
 				account.setPassword(rs.getString("password"));
+				account.setSessiondate(rs.getDate("sessiondate"));
+				account.setSessionkey(rs.getString("sessionkey"));
 				account.setCoin(rs.getInt("coin"));
 			}
 			if(count == 1) {

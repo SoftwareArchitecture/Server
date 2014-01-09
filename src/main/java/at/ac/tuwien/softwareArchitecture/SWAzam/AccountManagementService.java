@@ -49,8 +49,8 @@ public class AccountManagementService {
      */
     @PUT @Path("updateaccount")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void updateAccount(@QueryParam("id") int id, @QueryParam("username") String Username, @QueryParam("password") String Password, @QueryParam("firstname") String Firstname, @QueryParam("lastname") String Lastname) {
-    	AccountManagement.updateAccount(id, Username, Password, Firstname, Lastname);
+    public void updateAccount(@QueryParam("id") int id, @QueryParam("username") String Username, @QueryParam("password") String Password, @QueryParam("firstname") String Firstname, @QueryParam("lastname") String Lastname, @QueryParam("sessionkey") String sessionkey) {
+    	AccountManagement.updateAccount(id, Username, Password, Firstname, Lastname, sessionkey);
     }
     
 	/**
@@ -61,8 +61,8 @@ public class AccountManagementService {
      */
     @DELETE @Path("deleteaccount")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void updateAccount(@QueryParam("id") int id) {
-    	AccountManagement.deleteAccount(id);
+    public void updateAccount(@QueryParam("id") int id, @QueryParam("sessionkey") String SessionKey) {
+    	AccountManagement.deleteAccount(id, SessionKey);
     }
     
 	/**
@@ -73,7 +73,7 @@ public class AccountManagementService {
      */
     @POST @Path("insertaccount")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void insertAccount(@QueryParam("username") String Username, @QueryParam("password") String Password, @QueryParam("firstname") String Firstname, @QueryParam("lastname") String Lastname) {
-    	AccountManagement.insertAccount(Username, Password, Firstname, Lastname);
+    public void insertAccount(@QueryParam("username") String Username, @QueryParam("password") String Password, @QueryParam("firstname") String Firstname, @QueryParam("lastname") String Lastname, @QueryParam("sessionkey") String SessionKey) {
+    	AccountManagement.insertAccount(Username, Password, Firstname, Lastname, SessionKey);
     }
 }
