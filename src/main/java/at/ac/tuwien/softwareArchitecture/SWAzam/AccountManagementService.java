@@ -15,12 +15,12 @@ import at.ac.tuwien.softwareArchitecture.SWAzam.model.Account;
 
 @Path("accountmanagement")
 public class AccountManagementService {
-
-	   /**
-     * Method handling HTTP GET requests. The returned object will be sent
+ 
+	/**
+     * Method handling HTTP GET list all users requests. The returned object will be sent
      * to the client as "XML" media type.
      *
-     * @return String that will be returned as a text/plain response.
+     * @return String that will be returned as a JSON/XML response.
      */
     @GET @Path("/list")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -29,24 +29,48 @@ public class AccountManagementService {
         return AccountManagement.getAllAccounts();
     }
     
+	/**
+     * Method handling HTTP  login requests. The returned object will be sent
+     * to the client as "XML" media type.
+     *
+     * @return String that will be returned as a JSON/XML response.
+     */
     @GET @Path("login")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Account Login(@QueryParam("username") String Username, @QueryParam("password") String Password) {
     	return AccountManagement.login(Username, Password);
     }
     
+	/**
+     * Method handling HTTP PUT requests for updating an account. The returned object will be sent
+     * to the client as "XML" media type.
+     *
+     * @return String that will be returned as a JSON/XML response.
+     */
     @PUT @Path("updateaccount")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void updateAccount(@QueryParam("id") int id, @QueryParam("username") String Username, @QueryParam("password") String Password, @QueryParam("firstname") String Firstname, @QueryParam("lastname") String Lastname) {
     	AccountManagement.updateAccount(id, Username, Password, Firstname, Lastname);
     }
     
+	/**
+     * Method handling HTTP Delete requests for Deleting account. The returned object will be sent
+     * to the client as "XML" media type.
+     *
+     * @return String that will be returned as a JSON/XML response.
+     */
     @DELETE @Path("deleteaccount")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void updateAccount(@QueryParam("id") int id) {
     	AccountManagement.deleteAccount(id);
     }
     
+	/**
+     * Method handling HTTP Post requests for inserting accounts. The returned object will be sent
+     * to the client as "XML" media type.
+     *
+     * @return String that will be returned as a JSON/XML response.
+     */
     @POST @Path("insertaccount")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void insertAccount(@QueryParam("username") String Username, @QueryParam("password") String Password, @QueryParam("firstname") String Firstname, @QueryParam("lastname") String Lastname) {

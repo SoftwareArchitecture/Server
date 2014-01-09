@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -71,6 +72,15 @@ public class AccountDAOImpl implements AccountDAO {
 				
 		}
 		
+		if(account.getSessionkey() != null) {
+			if(!comma) {
+				comma = true;
+				sqlQuery += " sessionkey = ?, sessiondate = ?";
+			} else {
+				sqlQuery += ", sessionkey = ?, sessiondate = ?";
+			}
+		}
+		
 		sqlQuery += " WHERE id = ?";
 		
 		PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery);
@@ -89,14 +99,14 @@ public class AccountDAOImpl implements AccountDAO {
 			insertQuery.setString(paramCount++, account.getPassword());
 		}
 		
-		/*if(account.getSessionkey() != null) {
+		if(account.getSessionkey() != null) {
 			insertQuery.setString(paramCount++, account.getSessionkey());
 			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
 			Calendar cal = Calendar.getInstance();
 			String currentTime = sdf.format(cal.getTime());
 			insertQuery.setString(paramCount++, currentTime);
-		}*/
+		}
 		insertQuery.setInt(paramCount++, account.getId());
 		
 		insertQuery.executeUpdate();

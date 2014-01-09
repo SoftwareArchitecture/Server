@@ -4,6 +4,7 @@ import java.util.List;
 
 import at.ac.tuwien.softwareArchitecture.SWAzam.Database.AccountDAO;
 import at.ac.tuwien.softwareArchitecture.SWAzam.Database.AccountDAOFactory;
+import at.ac.tuwien.softwareArchitecture.SWAzam.Database.Helper;
 import at.ac.tuwien.softwareArchitecture.SWAzam.model.Account;
 
 public class AccountManagement {
@@ -57,6 +58,9 @@ public class AccountManagement {
 		Account loginAccount = accountdao.findByUsernamePassword(Username, Password);
 		
 		if(loginAccount != null) {
+			String session = Helper.generateSession();
+			loginAccount.setSessionkey(session);
+			accountdao.update(loginAccount);
 			System.out.println("Accounts found " + loginAccount.getId());
 		} else {
 			System.out.println("Username/Pass not found!");

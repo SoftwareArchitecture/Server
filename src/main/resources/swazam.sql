@@ -30,6 +30,8 @@ CREATE TABLE `Account` (
   `firstname` varchar(100) DEFAULT NULL,
   `lastname` varchar(45) DEFAULT NULL,
   `coin` bigint(20) NOT NULL DEFAULT '10',
+  `sessionkey` varchar(45) DEFAULT NULL,
+  `sessiondate` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
