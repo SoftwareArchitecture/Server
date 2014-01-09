@@ -2,7 +2,10 @@ package at.ac.tuwien.softwareArchitecture.SWAzam;
 
 import java.util.List;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -30,5 +33,23 @@ public class AccountManagementService {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Account Login(@QueryParam("username") String Username, @QueryParam("password") String Password) {
     	return AccountManagement.login(Username, Password);
+    }
+    
+    @PUT @Path("updateaccount")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void updateAccount(@QueryParam("id") int id, @QueryParam("username") String Username, @QueryParam("password") String Password, @QueryParam("firstname") String Firstname, @QueryParam("lastname") String Lastname) {
+    	AccountManagement.updateAccount(id, Username, Password, Firstname, Lastname);
+    }
+    
+    @DELETE @Path("deleteaccount")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void updateAccount(@QueryParam("id") int id) {
+    	AccountManagement.deleteAccount(id);
+    }
+    
+    @POST @Path("insertaccount")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void insertAccount(@QueryParam("username") String Username, @QueryParam("password") String Password, @QueryParam("firstname") String Firstname, @QueryParam("lastname") String Lastname) {
+    	AccountManagement.insertAccount(Username, Password, Firstname, Lastname);
     }
 }
