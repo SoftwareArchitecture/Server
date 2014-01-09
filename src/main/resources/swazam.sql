@@ -30,8 +30,6 @@ CREATE TABLE `Account` (
   `firstname` varchar(100) DEFAULT NULL,
   `lastname` varchar(45) DEFAULT NULL,
   `coin` bigint(20) NOT NULL DEFAULT '10',
-  `sessionkey` varchar(45) DEFAULT NULL,
-  `sessiondate` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
@@ -60,6 +58,8 @@ CREATE TABLE `History` (
   `reqtype` int(11) NOT NULL,
   `reqmessage` longtext,
   `fingerprint` longtext,
+  `sessionkey` varchar(45) DEFAULT NULL,
+  `sessiondate` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `accountid_idx` (`accountid`),
@@ -104,7 +104,7 @@ LOCK TABLES `Peer` WRITE;
 /*!40000 ALTER TABLE `Peer` ENABLE KEYS */;
 UNLOCK TABLES;
 
-INSERT INTO Account VALUES('test', 'test', 'test', 'test', '10', NULL, NULL)
+INSERT INTO Account (`username`,`password`,`firstname`,`lastname`,`coin`) VALUES('test', 'test', 'test', 'test', '10');
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

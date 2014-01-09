@@ -21,17 +21,21 @@ public class AccountManagement {
 		Account loginAccount = accountdao.findByUsernamePassword(Username, Password);
 		
 		if(loginAccount != null) {
-			// Generate SessionKey
-			UUID uniqueKey = UUID.randomUUID();
-			String sessionKey = String.valueOf(uniqueKey);
-			
 			// Updating Account with SessionKey
-			loginAccount.setSessionkey(sessionKey);
-			accountdao.update(loginAccount);
+			//loginAccount.setSessionkey(sessionKey);
+			//accountdao.update(loginAccount);
 			System.out.println("Accounts found " + loginAccount.getId());
 		} else {
 			System.out.println("Username/Pass not found!");
 		}
 		return loginAccount;
+	}
+	
+	private String generateSession() {
+		// Generate SessionKey
+		UUID uniqueKey = UUID.randomUUID();
+		String sessionKey = String.valueOf(uniqueKey);
+		return sessionKey;
+					
 	}
 }
