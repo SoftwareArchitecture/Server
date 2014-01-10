@@ -54,6 +54,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `History`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+/* Process Status = 0 not processed , 1 = in Progress, 2 = processed */;
 CREATE TABLE `History` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `accountid` int(11) NOT NULL,
@@ -62,6 +63,8 @@ CREATE TABLE `History` (
   `fingerprint` longtext,
   `sessionkey` varchar(45) DEFAULT NULL,
   `sessiondate` datetime DEFAULT NULL,
+  `peerid` datetime DEFAULT NULL,
+  `processstatus` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `accountid_idx` (`accountid`),
@@ -92,6 +95,8 @@ CREATE TABLE `Peer` (
   `name` varchar(100) DEFAULT NULL,
   `port` int(6) DEFAULT NULL,
   `ip` varchar(50) DEFAULT NULL,
+  `accountid` int DEFAULT NULL,
+  `active` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
