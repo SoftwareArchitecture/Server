@@ -31,7 +31,6 @@ public class PeerManagementService {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public PeerInfo registerPeer(PeerInfo peerInfo) {
     	PeerManagement pm = new PeerManagement();
-    	
-    	return null;
+    	return pm.registerPeer(peerInfo);
     }
 }

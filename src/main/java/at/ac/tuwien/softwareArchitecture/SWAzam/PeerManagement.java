@@ -34,11 +34,19 @@ public class PeerManagement {
 	public PeerInfo registerPeer(PeerInfo peerinfo) {
 		// Check Username Pass
 		Account peerAccount = accountdao.findByUsernamePassword(peerinfo.getUsername() , peerinfo.getPassword());
-		
-		// Search IF Peer aleready exists
-				
+						
 		// Insert Into DB
 		if (peerAccount != null) {
+			
+			// Search IF Peer aleready exists
+			Peer foundPeer = peerdao.getPeerByAccountId(peerAccount.getId());
+			if(foundPeer != null) {
+				// Peer already registered before
+				peerinfo.setPeerID(foundPeer.getId());
+				return peerinfo;
+			}
+
+			
 			Peer peer = new Peer();
 			peer.setAccountid(peerAccount.getId());
 			peer.setActive(true);
