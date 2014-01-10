@@ -5,13 +5,13 @@ import java.util.Date;
 import java.util.List;
 
 import at.ac.tuwien.softwareArchitecture.SWAzam.Database.AccountDAO;
-import at.ac.tuwien.softwareArchitecture.SWAzam.Database.AccountDAOFactory;
-import at.ac.tuwien.softwareArchitecture.SWAzam.Database.Helper;
+import at.ac.tuwien.softwareArchitecture.SWAzam.Database.DAOFactory;
+import at.ac.tuwien.softwarearchitecture.swazam.common.infos.Helper;
 import at.ac.tuwien.softwareArchitecture.SWAzam.model.Account;
 
 public class AccountManagement {
 
-	private static AccountDAO accountdao = AccountDAOFactory.create();
+	private static AccountDAO accountdao = DAOFactory.createAccount();
 	
 	public static List<Account> getAllAccounts() {
 		List<Account> retList = accountdao.getAccounts();
