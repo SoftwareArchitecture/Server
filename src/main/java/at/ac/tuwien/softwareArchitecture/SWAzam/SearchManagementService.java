@@ -16,18 +16,10 @@ import at.ac.tuwien.softwarearchitecture.swazam.common.infos.Helper;
 public class SearchManagementService {
 
 	@GET @Path("search")
-	@Consumes({MediaType.APPLICATION_OCTET_STREAM})
+	@Consumes({MediaType.APPLICATION_XML})
     @Produces({MediaType.TEXT_PLAIN})
-	public String search(byte[] Fingerprint) {
-		try {
-			FingerprintSearchRequest fpsearch = (FingerprintSearchRequest)  Helper.deserialize(Fingerprint);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public String search(FingerprintSearchRequest Fingerprint) {
+		
 		return "Hello";
 	}
 }
