@@ -65,7 +65,7 @@ public class AccountDAOImpl implements AccountDAO {
 		if(account.getPassword() != null) {
 			if(!comma) {
 				comma = true;
-				sqlQuery += " , password = ?";
+				sqlQuery += " password = ?";
 			} else {
 				sqlQuery += " , password = ?";
 			}
@@ -222,6 +222,49 @@ public class AccountDAOImpl implements AccountDAO {
 			}
 			if(count == 1) {
 				System.out.println("Account Found!");
+				return account;
+			}
+
+		} catch(Exception exc) {
+			exc.printStackTrace();	
+		}
+		
+		return null;
+	}
+
+	@Override
+	public void addCoin(int accountid, int amount) {
+		Account account = findByAccountNumber(accountid);
+		account.setCoin(account.getCoin() + amount);
+		update(account);
+	}
+
+	@Override
+	public Account findBySession(String Session) {
+		String sqlQuery = "SELECT * FROM Account WHERE (sessionkey = ?);";
+		System.out.println(sqlQuery + "," + Session);
+		Account account = null;
+		
+		try {
+			PreparedStatement selectQuery = db.conn.prepareStatement(sqlQuery);
+			selectQuery.setString(1, Session);
+			
+			ResultSet rs = selectQuery.executeQuery();
+			int count = 0;
+			while(rs.next()) {
+				count++;
+				account = new Account();
+				account.setId(rs.getInt("id"));
+				account.setFirstname(rs.getString("firstname"));
+				account.setLastname(rs.getString("lastname"));
+				account.setUsername(rs.getString("username"));
+				account.setPassword(rs.getString("password"));
+				account.setSessiondate(rs.getDate("sessiondate"));
+				account.setSessionkey(rs.getString("sessionkey"));
+				account.setCoin(rs.getInt("coin"));
+			}
+			if(count == 1) {
+				System.out.println("Account with session Found!");
 				return account;
 			}
 

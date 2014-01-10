@@ -14,7 +14,7 @@ public class HistoryDAOImpl implements HistoryDAO {
 	private DBAccess db = DBAccess.getDbCon();
 	
 	@Override
-	public boolean save(History history) {
+	public History save(History history) {
 		String sqlQuery = "INSERT INTO History (`accountid`,`reqtype`,`reqmessage`) VALUES (?,?,?)";
 		try {
 			PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery);
@@ -23,24 +23,35 @@ public class HistoryDAOImpl implements HistoryDAO {
 			insertQuery.setString(3, history.getRequestMessage());
 			
 			insertQuery.executeUpdate();
+			ResultSet rs = insertQuery.getGeneratedKeys();
+			int last_inserted_id = 0;
+            if(rs.next())
+            {
+                last_inserted_id = rs.getInt(1);
+            }
+            rs.close();
+            
+            History insertedHistory = findByHistoryNumber(last_inserted_id);
+            
 			System.out.println("Insert History Successfull!");
-			return true;
+			return insertedHistory;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return false;
+		return null;
 	}
 
 	@Override
 	public boolean update(History history) {
 		int paramCount = 1;
 		boolean comma = false;
+		History oldHistory = findByHistoryNumber(history.getId());
 		String sqlQuery = "UPDATE History SET ";
 	try {
 		
-		if(history.getRequestMessage() != null) {
+		if(history.getRequestMessage() != oldHistory.getRequestMessage()) {
 			if(!comma) {
 				comma = true;
 				sqlQuery += " reqmessage = ?";
@@ -49,7 +60,7 @@ public class HistoryDAOImpl implements HistoryDAO {
 			}
 		}
 		
-		if(history.getSessionkey() != null) {
+		if(history.getSessionkey() != oldHistory.getSessionkey()) {
 			if(!comma) {
 				comma = true;
 				sqlQuery += " sessionkey = ?, sessiondate = ?";
@@ -58,16 +69,25 @@ public class HistoryDAOImpl implements HistoryDAO {
 			}
 		}
 		
+		if(history.getMusicdesc() != oldHistory.getMusicdesc()) {
+			if(!comma) {
+				comma = true;
+				sqlQuery += " musicdesc  = ?";
+			} else {
+				sqlQuery += ", musicdesc = ?";
+			}
+		}
+		
 		sqlQuery += " WHERE id = ?";
 		
 		PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery);
 		// Insering Parameters
 		
-		if(history.getRequestMessage() != null) {
+		if(history.getRequestMessage() != oldHistory.getRequestMessage()) {
 			insertQuery.setString(paramCount++, history.getRequestMessage());
 		}
 		
-		if(history.getSessionkey() != null) {
+		if(history.getSessionkey() != oldHistory.getSessionkey()) {
 			insertQuery.setString(paramCount++, history.getSessionkey());
 			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
@@ -75,6 +95,11 @@ public class HistoryDAOImpl implements HistoryDAO {
 			String currentTime = sdf.format(cal.getTime());
 			insertQuery.setString(paramCount++, currentTime);
 		}
+		
+		if(history.getMusicdesc() != oldHistory.getMusicdesc()) {
+			insertQuery.setString(paramCount++, history.getMusicdesc());
+		}
+		
 		insertQuery.setInt(paramCount++, history.getId());
 		
 		insertQuery.executeUpdate();
@@ -89,7 +114,7 @@ public class HistoryDAOImpl implements HistoryDAO {
 	}
 
 	@Override
-	public History findByAccountNumber(int historyid) {
+	public History findByHistoryNumber(int historyid) {
 		String sqlQuery = "SELECT * FROM History WHERE (id = ?);";
 		System.out.println(sqlQuery + "," + historyid);
 		History history = null;
@@ -109,6 +134,7 @@ public class HistoryDAOImpl implements HistoryDAO {
 				history.setRequestMessage(rs.getString("reqmessage"));
 				history.setSessionkey(rs.getString("sessionkey"));
 				history.setSessiondate(rs.getDate("sessiondate"));
+				history.setMusicdesc(rs.getString("musicdesc"));
 			}
 			if(count == 1) {
 				System.out.println("History Found!");
@@ -153,6 +179,7 @@ public class HistoryDAOImpl implements HistoryDAO {
 				history.setRequestMessage(rs.getString("reqmessage"));
 				history.setSessionkey(rs.getString("sessionkey"));
 				history.setSessiondate(rs.getDate("sessiondate"));
+				history.setMusicdesc(rs.getString("musicdesc"));
 				listHistories.add(history);
 			}
 			rs.close();
@@ -160,6 +187,42 @@ public class HistoryDAOImpl implements HistoryDAO {
 			exc.printStackTrace();	
 		}
 		return listHistories;
+	}
+
+	@Override
+	public History searchWithSession(String Sessionkey) {
+		String sqlQuery = "SELECT * FROM History WHERE (sessionkey = ?);";
+		System.out.println(sqlQuery + "," + Sessionkey);
+		History history = null;
+		
+		try {
+			PreparedStatement selectQuery = db.conn.prepareStatement(sqlQuery);
+			selectQuery.setString(1, Sessionkey);
+			
+			ResultSet rs = selectQuery.executeQuery();
+			int count = 0;
+			while(rs.next()) {
+				count++;
+				history = new History();
+				history.setId(rs.getInt("id"));
+				history.setAccountid(rs.getInt("accountid"));
+				history.setRequesttype(rs.getInt("reqtype"));
+				history.setRequestMessage(rs.getString("reqmessage"));
+				history.setSessionkey(rs.getString("sessionkey"));
+				history.setSessiondate(rs.getDate("sessiondate"));
+				history.setMusicdesc(rs.getString("musicdesc"));
+			}
+			rs.close();
+			if(count == 1) {
+				System.out.println("History With Session Found!");
+				return history;
+			}
+
+		} catch(Exception exc) {
+			exc.printStackTrace();	
+		}
+		
+		return null;
 	}
 
 }

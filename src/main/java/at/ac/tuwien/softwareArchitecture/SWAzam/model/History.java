@@ -20,20 +20,53 @@ public class History implements Serializable {
 	@XmlAttribute(name = "historyid", required = true)
 	private int id;
 	
-	@XmlAttribute(name = "historyid", required = true)
+	@XmlAttribute(name = "accountid", required = true)
 	private int accountid;
 	
-	@XmlAttribute(name = "requesttype", required = true)
+	@XmlAttribute(name = "requesttype")
 	private int requesttype;
 	
-	@XmlAttribute(name = "requestmessage", required = true)
+	@XmlAttribute(name = "requestmessage")
 	private String requestMessage;
 	
-	@XmlAttribute(name = "sessionkey", required = true)
+	@XmlAttribute(name = "sessionkey")
 	private String sessionkey;
 	
-	@XmlAttribute(name = "sessiondate", required = true)
+	@XmlAttribute(name = "sessiondate")
 	private Date sessiondate;
+	
+	@XmlAttribute(name = "peerid")
+	private int peerid;
+	
+	@XmlAttribute(name = "processstatus")
+	private int processstatus;
+
+	@XmlAttribute(name = "musicdesc")
+	private String musicdesc;
+	
+	public String getMusicdesc() {
+		return musicdesc;
+	}
+
+	public void setMusicdesc(String musicdesc) {
+		this.musicdesc = musicdesc;
+	}
+
+	public int getPeerid() {
+		return peerid;
+	}
+
+	public void setPeerid(int peerid) {
+		this.peerid = peerid;
+	}
+
+	public int getProcessstatus() {
+		return processstatus;
+	}
+
+	public void setProcessstatus(int processstatus) {
+		this.processstatus = processstatus;
+	}
 
 	public int getId() {
 		return id;

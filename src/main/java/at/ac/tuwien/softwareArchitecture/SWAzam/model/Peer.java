@@ -32,6 +32,28 @@ public class Peer implements Serializable {
 	
 	@XmlAttribute(name = "peerip")
 	private String PeerIP;
+	
+	@XmlAttribute(name = "accountid")
+	private int accountid;
+	
+	@XmlAttribute(name = "active")
+	private boolean active;
+
+	public int getAccountid() {
+		return accountid;
+	}
+
+	public void setAccountid(int accountid) {
+		this.accountid = accountid;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 
 	public int getId() {
 		return id;

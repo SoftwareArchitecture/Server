@@ -11,4 +11,6 @@ public interface AccountDAO {
 		   public Account findByUsernamePassword(String Username, String Password);
 		   public boolean delete(Account account);
 		   public List<Account> getAccounts();
+		   public void addCoin(int accountid, int amount);
+		   public Account findBySession(String Session);
 }

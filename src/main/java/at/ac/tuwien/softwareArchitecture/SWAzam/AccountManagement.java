@@ -26,7 +26,9 @@ public class AccountManagement {
 		insAccount.setUsername(Username);
 		insAccount.setPassword(Password);
 		
-		if (isLoggedin(insAccount.getId(), SessionKey)) {
+		accountdao.findByUsernamePassword(Username, Password);
+		
+		if (isLoggedin(SessionKey)) {
 			return accountdao.save(insAccount);
 		}
 		else {
@@ -38,7 +40,7 @@ public class AccountManagement {
 		Account delAccount = new Account();
 		delAccount.setId(id);
 		
-		if (isLoggedin(delAccount.getId(), SessionKey)) {
+		if (isLoggedin(SessionKey)) {
 			return accountdao.delete(delAccount);
 		}
 		else {
@@ -46,8 +48,8 @@ public class AccountManagement {
 		}
 	}
 	
-	private static boolean isLoggedin(int id, String sessionkey) {
-		Account logAccount = accountdao.findByAccountNumber(id);
+	private static boolean isLoggedin(String sessionkey) {
+		Account logAccount = accountdao.findBySession(sessionkey);
 		 
 		Date d1 = null;
 		Date d2 = null;
@@ -94,7 +96,7 @@ public class AccountManagement {
 			updAccount.setLastname(Lastname);
 		}
 		
-		if (isLoggedin(updAccount.getId(), SessionKey)) { 
+		if (isLoggedin(SessionKey)) { 
 			return accountdao.update(updAccount);
 		} else {
 			return false;

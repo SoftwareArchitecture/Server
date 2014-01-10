@@ -2,10 +2,10 @@ package at.ac.tuwien.softwareArchitecture.SWAzam.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.ac.tuwien.softwareArchitecture.SWAzam.model.Account;
 import at.ac.tuwien.softwareArchitecture.SWAzam.model.Peer;
 
 public class PeerDAOImpl implements PeerDAO {
@@ -13,15 +13,103 @@ public class PeerDAOImpl implements PeerDAO {
 	private DBAccess db = DBAccess.getDbCon();
 	
 	@Override
-	public boolean save(Peer peer) {
+	public Peer save(Peer peer) {
+		String sqlQuery = "INSERT INTO Peer (`Issuperpeer`,`Superpeerid`,`name`,`port`, `ip`, `accountid`, `active`) VALUES (?,?,?,?,?,?,?)";
+		try {
+			PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery);
+			insertQuery.setInt(1, peer.getSuperpeerid());
+			insertQuery.setInt(2, peer.getSuperpeerid());
+			insertQuery.setString(3, peer.getName());
+			insertQuery.setInt(4, peer.getPort());
+			insertQuery.setString(5, peer.getPeerIP());
+			insertQuery.setInt(6, peer.getAccountid());
+			insertQuery.setBoolean(7, peer.isActive());
+			
+			insertQuery.executeUpdate();
+			
+			ResultSet rs = insertQuery.getGeneratedKeys();
+			int last_inserted_id = 0;
+            if(rs.next())
+            {
+                last_inserted_id = rs.getInt(1);
+            }
+            rs.close();
+            
+            Peer insertedPeer = findByAccountNumber(last_inserted_id);
+            
+			System.out.println("Insert Peer Successfull!");
+			return insertedPeer;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		return false;
+		return null;
 	}
 
 	@Override
 	public boolean update(Peer peer) {
-
-		return false;
+		int paramCount = 1;
+		String sqlQuery = "UPDATE Peer SET active = ? ";
+	try {
+		
+		if (peer.getName() != null) {
+			sqlQuery += " , name = ?";
+		}
+		
+		if(peer.getPeerIP() != null) {
+			sqlQuery += ", ip = ?";
+		}
+		
+		if(peer.getSuperpeerid() != 0) {
+			sqlQuery += " , Superpeerid = ?";	
+		}
+		
+		if(peer.getPort() != 0) {
+			sqlQuery += ", port = ?";
+		}
+		
+		if(peer.getAccountid() != 0) {
+			sqlQuery += ", accountid = ?";
+		}
+		
+		sqlQuery += " WHERE id = ?";
+		
+		PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery);
+		// Insering Parameters
+		insertQuery.setBoolean(paramCount++, peer.isActive());
+		
+		if (peer.getName() != null) {
+			insertQuery.setString(paramCount++, peer.getName());
+		}
+		
+		if(peer.getPeerIP() != null) {
+			insertQuery.setString(paramCount++, peer.getPeerIP());
+		}
+		
+		if(peer.getSuperpeerid() != 0) {
+			insertQuery.setInt(paramCount++, peer.getSuperpeerid());
+		}
+		
+		if(peer.getPort() != 0) {
+			insertQuery.setInt(paramCount++, peer.getPort());
+		}
+		
+		if(peer.getAccountid() != 0) {
+			insertQuery.setInt(paramCount++, peer.getAccountid());
+		}
+		
+		insertQuery.setInt(paramCount++, peer.getId());
+		
+		insertQuery.executeUpdate();
+		System.out.println("Update Peer Successfull!");
+		return true;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	return false;
 	}
 
 	@Override
@@ -45,9 +133,11 @@ public class PeerDAOImpl implements PeerDAO {
 				peer.setName(rs.getString("name"));
 				peer.setPort(rs.getInt("port"));
 				peer.setPeerIP(rs.getString("ip"));
+				peer.setAccountid(rs.getInt("accountid"));
+				peer.setActive(rs.getBoolean("active"));
 			}
 			if(count == 1) {
-				System.out.println("Account Found!");
+				System.out.println("Peer Found!");
 				return peer;
 			}
 
@@ -65,7 +155,7 @@ public class PeerDAOImpl implements PeerDAO {
 			PreparedStatement deleteQuery = db.conn.prepareStatement(sqlQuery);
 			deleteQuery.setInt(1, peer.getId());
 			deleteQuery.execute();
-			System.out.println("Delete Account Successfull!");
+			System.out.println("Delete Peer Successfull!");
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,6 +179,61 @@ public class PeerDAOImpl implements PeerDAO {
 				peer.setName(rs.getString("name"));
 				peer.setPort(rs.getInt("port"));
 				peer.setPeerIP(rs.getString("ip"));
+				peer.setAccountid(rs.getInt("accountid"));
+				peer.setActive(rs.getBoolean("active"));
+				listAccounts.add(peer);
+			}
+		} catch(Exception exc) {
+			exc.printStackTrace();	
+		}
+		return listAccounts;
+	}
+
+	@Override
+	public List<Peer> getSuperPeers() {
+		String sqlQuery = "SELECT * FROM Peer WHERE (Issuperpeer = 1 AND active = 1)";
+		List<Peer> listAccounts = new ArrayList<Peer>();
+		try {
+			PreparedStatement selectQuery = db.conn.prepareStatement(sqlQuery);
+			ResultSet rs = selectQuery.executeQuery();
+			Peer peer = null;
+			while(rs.next()) {
+				peer = new Peer();
+				peer.setId(rs.getInt("id"));
+				peer.setIsSuperPeer(rs.getBoolean("issuperpeer"));
+				peer.setSuperpeerid(rs.getInt("Superpeerid"));
+				peer.setName(rs.getString("name"));
+				peer.setPort(rs.getInt("port"));
+				peer.setPeerIP(rs.getString("ip"));
+				peer.setAccountid(rs.getInt("accountid"));
+				peer.setActive(rs.getBoolean("active"));
+				listAccounts.add(peer);
+			}
+		} catch(Exception exc) {
+			exc.printStackTrace();	
+		}
+		return listAccounts;
+	}
+
+	@Override
+	public List<Peer> getPeersOfSuperPeer(int superpeerid) {
+		String sqlQuery = "SELECT * FROM Peer WHERE Superpeerid = ?";
+		List<Peer> listAccounts = new ArrayList<Peer>();
+		try {
+			PreparedStatement selectQuery = db.conn.prepareStatement(sqlQuery);
+			selectQuery.setInt(1, superpeerid);
+			ResultSet rs = selectQuery.executeQuery();
+			Peer peer = null;
+			while(rs.next()) {
+				peer = new Peer();
+				peer.setId(rs.getInt("id"));
+				peer.setIsSuperPeer(rs.getBoolean("issuperpeer"));
+				peer.setSuperpeerid(rs.getInt("Superpeerid"));
+				peer.setName(rs.getString("name"));
+				peer.setPort(rs.getInt("port"));
+				peer.setPeerIP(rs.getString("ip"));
+				peer.setAccountid(rs.getInt("accountid"));
+				peer.setActive(rs.getBoolean("active"));
 				listAccounts.add(peer);
 			}
 		} catch(Exception exc) {
