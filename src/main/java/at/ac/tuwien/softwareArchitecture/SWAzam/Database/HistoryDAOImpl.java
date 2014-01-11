@@ -225,4 +225,41 @@ public class HistoryDAOImpl implements HistoryDAO {
 		return null;
 	}
 
+	@Override
+	public List<History> getHistoriesByAccountID(int accountid) {
+		String sqlQuery = "SELECT * FROM History WHERE (accountid = ? OR peerid = ?);";
+		System.out.println(sqlQuery + "," + accountid);
+		List<History> histories = new ArrayList<History>();
+		History history = null;
+		
+		try {
+			PreparedStatement selectQuery = db.conn.prepareStatement(sqlQuery);
+			selectQuery.setInt(1, accountid);
+			selectQuery.setInt(2, accountid);
+			
+			ResultSet rs = selectQuery.executeQuery();
+			int count = 0;
+			while(rs.next()) {
+				count++;
+				history = new History();
+				history.setId(rs.getInt("id"));
+				history.setAccountid(rs.getInt("accountid"));
+				history.setRequesttype(rs.getInt("reqtype"));
+				history.setRequestMessage(rs.getString("reqmessage"));
+				history.setSessionkey(rs.getString("sessionkey"));
+				history.setSessiondate(rs.getDate("sessiondate"));
+				history.setMusicdesc(rs.getString("musicdesc"));
+				histories.add(history);
+			}
+			rs.close();
+			System.out.println("Histories With accountid Found!");
+			return histories;
+
+		} catch(Exception exc) {
+			exc.printStackTrace();	
+		}
+		
+		return null;
+	}
+
 }

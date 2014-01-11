@@ -33,12 +33,20 @@ public class SearchManagement {
 	private static PeerDAO peerdao = DAOFactory.createPeer();
 	
 	/*
+	 * Searching history for an account id
+	 */
+	public static synchronized List<History> getHistory(int accountid) {
+		return historydao.getHistoriesByAccountID(accountid);
+	}
+	
+	/*
 	 * Searching if the search is finished with the given session key
 	 */
-	public static String searchResult(String Sessionkey) {
+	public static synchronized String searchResult(String Sessionkey) {
 		History history = historydao.searchWithSession(Sessionkey);
 		if (history.getProcessstatus() == 2) {
-			// Status = 2 search is finished and answered by peer
+			// Status = 2 search is finished and answered by peer and subtract 5 coins
+			accountdao.addCoin(history.getAccountid(), -10);
 			return history.getMusicdesc();
 		} 
 		else if (history.getProcessstatus() == 1) {
@@ -51,7 +59,7 @@ public class SearchManagement {
 	/*
 	 * Perform a Search Request
 	 */
-	public static String search(FingerprintSearchRequest Fingerprint) {		
+	public static synchronized String search(FingerprintSearchRequest Fingerprint) {		
 		// 1. Check Username Pass
 		Account foundAcc = accountdao.findByUsernamePassword(Fingerprint.getClientInfo().getUsername(), Fingerprint.getClientInfo().getPassword());
 		History newHistory = null;
@@ -92,7 +100,7 @@ public class SearchManagement {
 		return "";
 	}
 	
-	private static Peer getRndSuperPeer() {
+	private static synchronized Peer getRndSuperPeer() {
 		List<Peer> lstSuperPeers = peerdao.getSuperPeers();
 		if( lstSuperPeers.size() != 0) {
 			Random r = new Random();
@@ -103,7 +111,7 @@ public class SearchManagement {
 		return null;
 	}
 	
-	private static boolean sendPeerSearchRequest(Peer peer, FingerprintSearchRequest searchRequest) {
+	private static synchronized boolean sendPeerSearchRequest(Peer peer, FingerprintSearchRequest searchRequest) {
 		
 		try {
 	

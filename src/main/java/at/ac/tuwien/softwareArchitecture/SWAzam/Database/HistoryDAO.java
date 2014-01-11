@@ -11,4 +11,5 @@ public interface HistoryDAO {
 	   public boolean delete(History history);
 	   public List<History> getHistories();
 	   public History searchWithSession(String Sessionkey);
+	   public List<History> getHistoriesByAccountID(int accountid);
 }

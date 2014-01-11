@@ -61,7 +61,7 @@ public class AccountManagementService {
      */
     @DELETE @Path("deleteaccount")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void updateAccount(@QueryParam("id") int id, @QueryParam("sessionkey") String SessionKey) {
+    public void deleteAccount(@QueryParam("id") int id, @QueryParam("sessionkey") String SessionKey) {
     	AccountManagement.deleteAccount(id, SessionKey);
     }
     
