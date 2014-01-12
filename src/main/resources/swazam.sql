@@ -64,7 +64,7 @@ CREATE TABLE `History` (
   `sessionkey` varchar(45) DEFAULT NULL,
   `sessiondate` datetime DEFAULT NULL,
   `musicdesc` varchar(100) DEFAULT NULL,
-  `peerid` datetime DEFAULT NULL,
+  `peerid` int(11) DEFAULT NULL,
   `processstatus` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),

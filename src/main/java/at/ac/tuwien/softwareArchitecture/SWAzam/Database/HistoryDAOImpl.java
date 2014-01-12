@@ -249,6 +249,7 @@ public class HistoryDAOImpl implements HistoryDAO {
 				history.setSessionkey(rs.getString("sessionkey"));
 				history.setSessiondate(rs.getDate("sessiondate"));
 				history.setMusicdesc(rs.getString("musicdesc"));
+				history.setPeerid(rs.getInt("peerid"));
 				histories.add(history);
 			}
 			rs.close();
