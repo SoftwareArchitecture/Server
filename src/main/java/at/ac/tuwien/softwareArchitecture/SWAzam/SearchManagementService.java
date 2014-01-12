@@ -39,8 +39,8 @@ public class SearchManagementService {
 	/*
 	 * Requesting the search result by sessionkey
 	 */
-	@GET @Path("search")
-	@Produces({MediaType.TEXT_PLAIN})
+	@GET @Path("history")
+	@Produces({MediaType.APPLICATION_XML})
 	public List<History> getHistory(@QueryParam("accountid") int AccountID) {
 		return SearchManagement.getHistory(AccountID);
 	}
