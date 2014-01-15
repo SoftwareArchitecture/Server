@@ -20,10 +20,11 @@ public class SearchManagementService {
 	 * Requesting a search 
 	 * Return sessionKey in order to search later for it
 	 */
-	@POST @Path("search")
+	@POST @Path("/search")
 	@Consumes({MediaType.APPLICATION_XML})
     @Produces({MediaType.TEXT_PLAIN})
 	public String search(FingerprintSearchRequest Fingerprint) {
+		System.out.println("Finger print: " + Fingerprint.getClientInfo().getClientID());
 		String sessionkey = SearchManagement.search(Fingerprint);
 		return sessionkey;
 	}
@@ -31,7 +32,7 @@ public class SearchManagementService {
 	/*
 	 * Requesting the search result by sessionkey
 	 */
-	@GET @Path("searchresult")
+	@GET @Path("/searchresult")
 	@Produces({MediaType.TEXT_PLAIN})
 	public String searchResult(@QueryParam("sessionkey") String Sessionkey) {
 		return SearchManagement.searchResult(Sessionkey);
@@ -40,7 +41,7 @@ public class SearchManagementService {
 	/*
 	 * Requesting the search result by sessionkey
 	 */
-	@GET @Path("history")
+	@GET @Path("/history")
 	@Produces({MediaType.APPLICATION_XML})
 	public List<History> getHistory(@QueryParam("accountid") int AccountID) {
 		return SearchManagement.getHistory(AccountID);

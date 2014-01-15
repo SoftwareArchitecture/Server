@@ -63,18 +63,33 @@ public class PeerManagement {
 			
 			Peer superPeer = getAppropriateSuperPeer();
 			if (superPeer == null) {
+				System.out.println("Super peer not found, it should be himself");
 				peer.setIsSuperPeer(true);
+				//peer.setSuperpeerid(peer.getId());
+			} else {
+				peer.setSuperpeerid(superPeer.getId());
+				//peer.setPeerIP(superPeer.getPeerIP());
+				//peer.setPort(superPeer.getPort());
 			}
+				
 			peer = peerdao.save(peer);
-			peer.setSuperpeerid(peer.getId());
-			peerdao.update(peer);
+			System.out.println("peer inserted!");
 			
+			System.out.println("Update super peer!");
+			if(peer.isIsSuperPeer()) {
+				peer.setSuperpeerid(peer.getId());
+			}
+			
+			peerdao.update(peer);
+			System.out.println("Updated super peer!");
 			if(!peer.isIsSuperPeer()) {
-				if(peer.isIsSuperPeer()) {
-					peerinfo.setSuperPeerID(superPeer.getId());
-					peerinfo.setSuperPeerPort(superPeer.getPort());
-					peerinfo.setSuperPeerIp(superPeer.getPeerIP());
-				}
+				peerinfo.setSuperPeerID(superPeer.getId());
+				peerinfo.setSuperPeerPort(superPeer.getPort());
+				peerinfo.setSuperPeerIp(superPeer.getPeerIP());
+			} else {
+				peerinfo.setSuperPeerID(peer.getId());
+				peerinfo.setSuperPeerPort(peer.getPort());
+				peerinfo.setSuperPeerIp(peer.getPeerIP());
 			}
 			peerinfo.setPeerID(peer.getId());
 			peerinfo.setIp(peer.getPeerIP());

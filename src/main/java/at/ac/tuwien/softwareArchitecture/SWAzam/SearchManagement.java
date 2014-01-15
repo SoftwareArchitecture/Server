@@ -61,6 +61,7 @@ public class SearchManagement {
 	 */
 	public static synchronized String search(FingerprintSearchRequest Fingerprint) {		
 		// 1. Check Username Pass
+		System.out.println("Finger print: " + Fingerprint.getClientInfo().getClientID());
 		Account foundAcc = accountdao.findByUsernamePassword(Fingerprint.getClientInfo().getUsername(), Fingerprint.getClientInfo().getPassword());
 		History newHistory = null;
 		// 2. Save History and generate a session

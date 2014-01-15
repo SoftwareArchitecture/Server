@@ -3,6 +3,7 @@ package at.ac.tuwien.softwareArchitecture.SWAzam.Database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,12 @@ public class PeerDAOImpl implements PeerDAO {
 	public Peer save(Peer peer) {
 		String sqlQuery = "INSERT INTO Peer (`Issuperpeer`,`Superpeerid`,`name`,`port`, `ip`, `accountid`, `active`) VALUES (?,?,?,?,?,?,?)";
 		try {
-			PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery);
-			insertQuery.setInt(1, peer.getSuperpeerid());
+			PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+			if(peer.isIsSuperPeer()) {
+				insertQuery.setInt(1, 1);
+			} else {
+				insertQuery.setInt(1, 0);
+			}
 			insertQuery.setInt(2, peer.getSuperpeerid());
 			insertQuery.setString(3, peer.getName());
 			insertQuery.setInt(4, peer.getPort());
@@ -36,7 +41,7 @@ public class PeerDAOImpl implements PeerDAO {
             rs.close();
             
             Peer insertedPeer = findByPeerNumber(last_inserted_id);
-            
+            System.out.println("Last insertet peer: " + insertedPeer.getId());
 			System.out.println("Insert Peer Successfull!");
 			return insertedPeer;
 		} catch (SQLException e) {
@@ -75,6 +80,7 @@ public class PeerDAOImpl implements PeerDAO {
 		
 		sqlQuery += " WHERE id = ?";
 		
+		System.out.println("Update SQL :" + sqlQuery);
 		PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery);
 		// Insering Parameters
 		insertQuery.setBoolean(paramCount++, peer.isActive());
