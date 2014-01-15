@@ -42,7 +42,15 @@ public class PeerManagement {
 			Peer foundPeer = peerdao.getPeerByAccountId(peerAccount.getId());
 			if(foundPeer != null) {
 				// Peer already registered before
+				if(foundPeer.isIsSuperPeer()) {
+					Peer superPeer = peerdao.findByPeerNumber(foundPeer.getSuperpeerid());
+					peerinfo.setSuperPeerID(superPeer.getId());
+					peerinfo.setSuperPeerPort(superPeer.getPort());
+					peerinfo.setSuperPeerIp(superPeer.getPeerIP());
+				}
 				peerinfo.setPeerID(foundPeer.getId());
+				peerinfo.setIp(foundPeer.getPeerIP());
+				peerinfo.setPort(foundPeer.getPort());
 				return peerinfo;
 			}
 
@@ -60,7 +68,17 @@ public class PeerManagement {
 			peer = peerdao.save(peer);
 			peer.setSuperpeerid(peer.getId());
 			peerdao.update(peer);
+			
+			if(!peer.isIsSuperPeer()) {
+				if(peer.isIsSuperPeer()) {
+					peerinfo.setSuperPeerID(superPeer.getId());
+					peerinfo.setSuperPeerPort(superPeer.getPort());
+					peerinfo.setSuperPeerIp(superPeer.getPeerIP());
+				}
+			}
 			peerinfo.setPeerID(peer.getId());
+			peerinfo.setIp(peer.getPeerIP());
+			peerinfo.setPort(peer.getPort());
 		}
 		return peerinfo;
 	}
