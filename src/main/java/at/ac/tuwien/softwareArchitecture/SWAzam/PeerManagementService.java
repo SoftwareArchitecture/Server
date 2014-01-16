@@ -33,4 +33,15 @@ public class PeerManagementService {
     	PeerManagement pm = new PeerManagement();
     	return pm.registerPeer(peerInfo);
     }
+    
+    /*
+     * Peers will using this for registering / reactivating into server
+     */
+    @POST
+    @Path("/updatepeer")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public PeerInfo updatePeer(PeerInfo peerInfo) {
+    	PeerManagement pm = new PeerManagement();
+    	return pm.registerPeer(peerInfo);
+    }
 }

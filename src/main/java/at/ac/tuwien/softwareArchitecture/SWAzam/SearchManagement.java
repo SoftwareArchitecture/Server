@@ -61,7 +61,7 @@ public class SearchManagement {
 	 */
 	public static synchronized String search(FingerprintSearchRequest Fingerprint) {		
 		// 1. Check Username Pass
-		System.out.println("Finger print: " + Fingerprint.getClientInfo().getClientID());
+		//System.out.println("Finger print: " + Fingerprint.getClientInfo().getClientID());
 		Account foundAcc = accountdao.findByUsernamePassword(Fingerprint.getClientInfo().getUsername(), Fingerprint.getClientInfo().getPassword());
 		History newHistory = null;
 		// 2. Save History and generate a session
@@ -71,13 +71,14 @@ public class SearchManagement {
 			newHistory.setAccountid(foundAcc.getId());
 			newHistory.setRequesttype(0);
 			newHistory.setSessionkey(Helper.generateSession());
-			newHistory.setSessiondate(new Date());
 			newHistory.setRequestMessage("Search Fingerprint with accountid: " + foundAcc.getId());
 			History addedHistory = historydao.save(newHistory);
 			
 			// 3. Send it to Peer
 			// Search For Super Peer
+			System.out.println("Trying to get random superpeer to send the request");
 			Peer foundSuperPeer = getRndSuperPeer();
+			System.out.println("Super Peer with id " + foundSuperPeer.getId() + " found!");
 			if(foundSuperPeer != null) {
 				// Send the SuperPeer Request
 				Fingerprint.getClientInfo().setSessionKey(newHistory.getSessionkey());
@@ -104,10 +105,10 @@ public class SearchManagement {
 	private static synchronized Peer getRndSuperPeer() {
 		List<Peer> lstSuperPeers = peerdao.getSuperPeers();
 		if( lstSuperPeers.size() != 0) {
-			Random r = new Random();
-			int rnd = r.nextInt(lstSuperPeers.size() - 1) + 1;
-			
-			return lstSuperPeers.get(rnd -1);
+			//Random r = new Random();
+			int rnd = 1 + (int)(Math.random() * ((lstSuperPeers.size() - 1) + 1)); //Min + (int)(Math.random() * ((Max - Min) + 1))
+			System.out.println("RANDOM NUMBER " + rnd + " found!");
+			return lstSuperPeers.get(rnd - 1);
 		}
 		return null;
 	}
@@ -127,6 +128,7 @@ public class SearchManagement {
 		
 
 			URL url = new URL(String.format("http://%s:%s/Peer/REST_API/search", peer.getPeerIP(), peer.getPort()));
+			System.out.println("Trying to contact Peer with URL: " + url);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
@@ -134,7 +136,7 @@ public class SearchManagement {
 
 			String input = stringWriter.getBuffer().toString();
 			
-			System.out.println(input);
+			//System.out.println(input);
 
 			OutputStream os = conn.getOutputStream();
 			os.write(input.getBytes());

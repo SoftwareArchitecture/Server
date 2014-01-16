@@ -3,8 +3,10 @@ package at.ac.tuwien.softwareArchitecture.SWAzam.Database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import at.ac.tuwien.softwareArchitecture.SWAzam.model.History;
@@ -15,12 +17,18 @@ public class HistoryDAOImpl implements HistoryDAO {
 	
 	@Override
 	public History save(History history) {
-		String sqlQuery = "INSERT INTO History (`accountid`,`reqtype`,`reqmessage`) VALUES (?,?,?)";
+		String sqlQuery = "INSERT INTO History (`accountid`,`reqtype`,`reqmessage`, `sessionkey`,`sessiondate`) VALUES (?,?,?,?,?)";
 		try {
-			PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery);
+			PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 			insertQuery.setInt(1, history.getAccountid());
 			insertQuery.setInt(2, history.getRequesttype());
 			insertQuery.setString(3, history.getRequestMessage());
+			insertQuery.setString(4, history.getSessionkey());
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
+			Calendar cal = Calendar.getInstance();
+			String currentTime = sdf.format(cal.getTime());
+			insertQuery.setString(5, currentTime);
 			
 			insertQuery.executeUpdate();
 			ResultSet rs = insertQuery.getGeneratedKeys();
@@ -78,6 +86,33 @@ public class HistoryDAOImpl implements HistoryDAO {
 			}
 		}
 		
+		if(history.getProcessstatus() != oldHistory.getProcessstatus()) {
+			if(!comma) {
+				comma = true;
+				sqlQuery += " processstatus  = ?";
+			} else {
+				sqlQuery += ", processstatus = ?";
+			}
+		}
+		
+		if(history.getPeerid() != oldHistory.getPeerid()) {
+			if(!comma) {
+				comma = true;
+				sqlQuery += " peerid  = ?";
+			} else {
+				sqlQuery += ", peerid = ?";
+			}
+		}
+		
+		if(history.getSessionkey() != oldHistory.getSessionkey()) {
+			if(!comma) {
+				comma = true;
+				sqlQuery += " sessionkey  = ?, sessiondate = ?";
+			} else {
+				sqlQuery += ", sessionkey = ?, sessiondate = ?";
+			}
+		}
+		
 		sqlQuery += " WHERE id = ?";
 		
 		PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery);
@@ -98,6 +133,23 @@ public class HistoryDAOImpl implements HistoryDAO {
 		
 		if(history.getMusicdesc() != oldHistory.getMusicdesc()) {
 			insertQuery.setString(paramCount++, history.getMusicdesc());
+		}
+		
+		if(history.getProcessstatus() != oldHistory.getProcessstatus()) {
+			insertQuery.setInt(paramCount++, history.getProcessstatus());
+		}
+		
+		if(history.getPeerid() != oldHistory.getPeerid()) {
+			insertQuery.setInt(paramCount++, history.getPeerid());
+		}
+		
+		if(history.getSessionkey() != oldHistory.getSessionkey()) {
+			insertQuery.setString(paramCount++, history.getSessionkey());
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
+			Calendar cal = Calendar.getInstance();
+			String currentTime = sdf.format(cal.getTime());
+			insertQuery.setString(paramCount++, currentTime);
 		}
 		
 		insertQuery.setInt(paramCount++, history.getId());

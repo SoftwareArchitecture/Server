@@ -3,6 +3,7 @@ package at.ac.tuwien.softwareArchitecture.SWAzam.Database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -20,7 +21,7 @@ public class AccountDAOImpl implements AccountDAO {
 		
 		String sqlQuery = "INSERT INTO Account (`username`,`password`,`firstname`,`lastname`) VALUES (?,?,?,?)";
 		try {
-			PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery);
+			PreparedStatement insertQuery = db.conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 			insertQuery.setString(1, account.getUsername());
 			insertQuery.setString(2, account.getPassword());
 			insertQuery.setString(3, account.getFirstname());

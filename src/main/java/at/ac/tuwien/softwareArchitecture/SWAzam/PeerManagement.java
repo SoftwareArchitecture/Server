@@ -17,6 +17,11 @@ public class PeerManagement {
 	private HistoryDAO historydao = DAOFactory.createHistory();
 	private AccountDAO accountdao = DAOFactory.createAccount();
 	
+	public void updatePeer(PeerInfo peerinfo) {
+		// Update the superpeer statuses
+		
+	}
+	
 	public void searchResult(FingerprintSearchResponse Response) {
 		// update History to finish and update music description if exist
 		
