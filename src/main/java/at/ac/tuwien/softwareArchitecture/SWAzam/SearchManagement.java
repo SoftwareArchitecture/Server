@@ -43,10 +43,11 @@ public class SearchManagement {
 	 * Searching if the search is finished with the given session key
 	 */
 	public static synchronized String searchResult(String Sessionkey) {
+		System.out.println("Sessionkey requested: " + Sessionkey);
 		History history = historydao.searchWithSession(Sessionkey);
 		if (history.getProcessstatus() == 2) {
 			// Status = 2 search is finished and answered by peer and subtract 5 coins
-			accountdao.addCoin(history.getAccountid(), -10);
+			accountdao.addCoin(history.getAccountid(), -1);
 			return history.getMusicdesc();
 		} 
 		else if (history.getProcessstatus() == 1) {
@@ -141,7 +142,7 @@ public class SearchManagement {
 			OutputStream os = conn.getOutputStream();
 			os.write(input.getBytes());
 			os.flush();
-
+			//System.out.println(os.toString());
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
 				System.out.println(conn.getResponseMessage());
 				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());

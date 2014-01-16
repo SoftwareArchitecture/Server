@@ -55,28 +55,32 @@ public class PeerDAOImpl implements PeerDAO {
 	@Override
 	public boolean update(Peer peer) {
 		int paramCount = 1;
+		
+		Peer foundpeer = findByPeerNumber(peer.getId());
+		
 		String sqlQuery = "UPDATE Peer SET active = ? ";
 	try {
 		
-		if (peer.getName() != null) {
+		if (peer.getName() != foundpeer.getName()) {
 			sqlQuery += " , name = ?";
 		}
 		
-		if(peer.getPeerIP() != null) {
+		if(peer.getPeerIP() != foundpeer.getPeerIP()) {
 			sqlQuery += ", ip = ?";
 		}
 		
-		if(peer.getSuperpeerid() != 0) {
-			sqlQuery += " , Superpeerid = ?";	
+		if(peer.getSuperpeerid() != foundpeer.getSuperpeerid()) {
+			sqlQuery += " , Superpeerid = ?";
 		}
 		
-		if(peer.getPort() != 0) {
+		if(peer.getPort() != foundpeer.getPort()) {
 			sqlQuery += ", port = ?";
 		}
 		
-		if(peer.getAccountid() != 0) {
+		if(peer.getAccountid() != foundpeer.getAccountid()) {
 			sqlQuery += ", accountid = ?";
 		}
+
 		
 		sqlQuery += " WHERE id = ?";
 		
@@ -85,23 +89,23 @@ public class PeerDAOImpl implements PeerDAO {
 		// Insering Parameters
 		insertQuery.setBoolean(paramCount++, peer.isActive());
 		
-		if (peer.getName() != null) {
+		if (peer.getName() != foundpeer.getName()) {
 			insertQuery.setString(paramCount++, peer.getName());
 		}
 		
-		if(peer.getPeerIP() != null) {
+		if(peer.getPeerIP() != foundpeer.getPeerIP()) {
 			insertQuery.setString(paramCount++, peer.getPeerIP());
 		}
 		
-		if(peer.getSuperpeerid() != 0) {
+		if(peer.getSuperpeerid() != foundpeer.getSuperpeerid()) {
 			insertQuery.setInt(paramCount++, peer.getSuperpeerid());
 		}
 		
-		if(peer.getPort() != 0) {
+		if(peer.getPort() != foundpeer.getPort()) {
 			insertQuery.setInt(paramCount++, peer.getPort());
 		}
 		
-		if(peer.getAccountid() != 0) {
+		if(peer.getAccountid() != foundpeer.getAccountid()) {
 			insertQuery.setInt(paramCount++, peer.getAccountid());
 		}
 		

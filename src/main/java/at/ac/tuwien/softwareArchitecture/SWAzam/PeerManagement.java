@@ -19,6 +19,17 @@ public class PeerManagement {
 	
 	public void updatePeer(PeerInfo peerinfo) {
 		// Update the superpeer statuses
+		Peer shouldbesuperPeer = peerdao.findByPeerNumber(peerinfo.getPeerID());
+		shouldbesuperPeer.setIsSuperPeer(true);
+		shouldbesuperPeer.setSuperpeerid(shouldbesuperPeer.getId());
+		
+		Peer deactivePeer = peerdao.findByPeerNumber(peerinfo.getSuperPeerID());
+		deactivePeer.setIsSuperPeer(false);
+		deactivePeer.setActive(false);
+		deactivePeer.setSuperpeerid(shouldbesuperPeer.getId());
+		
+		peerdao.save(deactivePeer);
+		peerdao.save(shouldbesuperPeer);
 		
 	}
 	
@@ -32,7 +43,7 @@ public class PeerManagement {
 			historydao.update(resHistory);
 			
 			// Add coin to peer
-			accountdao.addCoin(Response.getPeerInfo().getPeerID(), 10);
+			accountdao.addCoin(Response.getClientInfo().getClientID(), 2);
 		}
 	}
 	

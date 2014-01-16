@@ -40,8 +40,8 @@ public class PeerManagementService {
     @POST
     @Path("/updatepeer")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public PeerInfo updatePeer(PeerInfo peerInfo) {
+    public void updatePeer(PeerInfo peerInfo) {
     	PeerManagement pm = new PeerManagement();
-    	return pm.registerPeer(peerInfo);
+    	pm.updatePeer(peerInfo);
     }
 }

@@ -263,8 +263,10 @@ public class HistoryDAOImpl implements HistoryDAO {
 				history.setSessionkey(rs.getString("sessionkey"));
 				history.setSessiondate(rs.getDate("sessiondate"));
 				history.setMusicdesc(rs.getString("musicdesc"));
+				history.setProcessstatus(rs.getInt("processstatus"));
 			}
 			rs.close();
+			System.out.println("Found histories," + count);
 			if(count == 1) {
 				System.out.println("History With Session Found!");
 				return history;
