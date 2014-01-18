@@ -42,6 +42,7 @@ public class PeerManagementService {
     @Path("/updatepeer")
     @Consumes(MediaType.APPLICATION_XML)
     public void updatePeer(PeerInfo peerInfo) {
+    	System.out.println("Calling update peer successfull!");
     	PeerManagement pm = new PeerManagement();
     	pm.updatePeer(peerInfo);
     }
