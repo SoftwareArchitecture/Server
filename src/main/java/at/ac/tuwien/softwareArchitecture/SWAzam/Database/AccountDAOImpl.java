@@ -41,11 +41,12 @@ public class AccountDAOImpl implements AccountDAO {
 	@Override
 	public boolean update(Account account) {
 		int paramCount = 1;
+		Account foundAccount = findByAccountNumber(account.getId());
 		boolean comma = false;
 		String sqlQuery = "UPDATE Account SET ";
 	try {
 		
-		if (account.getFirstname() != null) {
+		if (account.getFirstname() != foundAccount.getFirstname()) {
 			if(!comma) {
 				comma = true;
 				sqlQuery += " firstname = ?";
@@ -54,7 +55,7 @@ public class AccountDAOImpl implements AccountDAO {
 			}
 		}
 		
-		if(account.getLastname() != null) {
+		if(account.getLastname() != foundAccount.getLastname()) {
 			if(!comma) {
 				comma = true;
 				sqlQuery += " lastname = ?";
@@ -63,7 +64,7 @@ public class AccountDAOImpl implements AccountDAO {
 			}
 		}
 		
-		if(account.getPassword() != null) {
+		if(account.getPassword() != foundAccount.getPassword()) {
 			if(!comma) {
 				comma = true;
 				sqlQuery += " password = ?";
@@ -73,12 +74,21 @@ public class AccountDAOImpl implements AccountDAO {
 				
 		}
 		
-		if(account.getSessionkey() != null) {
+		if(account.getSessionkey() != foundAccount.getSessionkey()) {
 			if(!comma) {
 				comma = true;
 				sqlQuery += " sessionkey = ?, sessiondate = ?";
 			} else {
 				sqlQuery += ", sessionkey = ?, sessiondate = ?";
+			}
+		}
+		
+		if(account.getCoin() != foundAccount.getCoin()) {
+			if(!comma) {
+				comma = true;
+				sqlQuery += " coin = ?";
+			} else {
+				sqlQuery += ", coin = ?";
 			}
 		}
 		
@@ -88,19 +98,19 @@ public class AccountDAOImpl implements AccountDAO {
 		// Insering Parameters
 		//insertQuery.setInt(paramCount++, account.getCoin());
 		
-		if(account.getFirstname() != null) {
+		if(account.getFirstname() != foundAccount.getFirstname()) {
 			insertQuery.setString(paramCount++, account.getFirstname());
 		}
 		
-		if(account.getLastname() != null) {
+		if(account.getLastname() != foundAccount.getLastname()) {
 			insertQuery.setString(paramCount++, account.getLastname());
 		}
 		
-		if(account.getPassword() != null) {
+		if(account.getPassword() != foundAccount.getPassword()) {
 			insertQuery.setString(paramCount++, account.getPassword());
 		}
 		
-		if(account.getSessionkey() != null) {
+		if(account.getSessionkey() != foundAccount.getSessionkey()) {
 			insertQuery.setString(paramCount++, account.getSessionkey());
 			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
@@ -108,6 +118,11 @@ public class AccountDAOImpl implements AccountDAO {
 			String currentTime = sdf.format(cal.getTime());
 			insertQuery.setString(paramCount++, currentTime);
 		}
+		
+		if(account.getCoin() != foundAccount.getCoin()) {
+			insertQuery.setInt(paramCount++, account.getCoin());
+		}
+		
 		insertQuery.setInt(paramCount++, account.getId());
 		
 		insertQuery.executeUpdate();

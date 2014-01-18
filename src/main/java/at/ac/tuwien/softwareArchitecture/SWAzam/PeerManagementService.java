@@ -2,6 +2,7 @@ package at.ac.tuwien.softwareArchitecture.SWAzam;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -37,9 +38,8 @@ public class PeerManagementService {
     /*
      * Peers will using this for registering / reactivating into server
      */
-    @POST
+    @PUT
     @Path("/updatepeer")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void updatePeer(PeerInfo peerInfo) {
     	PeerManagement pm = new PeerManagement();
     	pm.updatePeer(peerInfo);

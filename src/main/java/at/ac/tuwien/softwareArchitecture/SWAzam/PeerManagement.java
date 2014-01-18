@@ -19,16 +19,21 @@ public class PeerManagement {
 	
 	public void updatePeer(PeerInfo peerinfo) {
 		// Update the superpeer statuses
+		System.out.println("Setting Peer " + peerinfo.getPeerID() + " to super peer!");
 		Peer shouldbesuperPeer = peerdao.findByPeerNumber(peerinfo.getPeerID());
 		shouldbesuperPeer.setIsSuperPeer(true);
 		shouldbesuperPeer.setSuperpeerid(shouldbesuperPeer.getId());
 		
+		System.out.println("Deactivate Peer " + peerinfo.getSuperPeerID() + " to super peer!");
 		Peer deactivePeer = peerdao.findByPeerNumber(peerinfo.getSuperPeerID());
 		deactivePeer.setIsSuperPeer(false);
 		deactivePeer.setActive(false);
 		deactivePeer.setSuperpeerid(shouldbesuperPeer.getId());
 		
+		System.out.println("Saving Deactivate Peer with id:" + deactivePeer.getId());
 		peerdao.save(deactivePeer);
+		
+		System.out.println("Saving Promote SuperPeer with id:" + shouldbesuperPeer.getId());
 		peerdao.save(shouldbesuperPeer);
 		
 	}
@@ -40,6 +45,7 @@ public class PeerManagement {
 		if (resHistory != null) {
 			resHistory.setMusicdesc(Response.getFingerprint().getDescription());
 			resHistory.setProcessstatus(2);
+			resHistory.setPeerid(Response.getPeerInfo().getPeerID());
 			historydao.update(resHistory);
 			
 			// Add coin to peer
@@ -58,11 +64,15 @@ public class PeerManagement {
 			Peer foundPeer = peerdao.getPeerByAccountId(peerAccount.getId());
 			if(foundPeer != null) {
 				// Peer already registered before
-				if(foundPeer.isIsSuperPeer()) {
+				if(!foundPeer.isIsSuperPeer()) {
 					Peer superPeer = peerdao.findByPeerNumber(foundPeer.getSuperpeerid());
 					peerinfo.setSuperPeerID(superPeer.getId());
 					peerinfo.setSuperPeerPort(superPeer.getPort());
 					peerinfo.setSuperPeerIp(superPeer.getPeerIP());
+				} else {
+					peerinfo.setSuperPeerID(foundPeer.getId());
+					peerinfo.setSuperPeerPort(foundPeer.getPort());
+					peerinfo.setSuperPeerIp(foundPeer.getPeerIP());
 				}
 				peerinfo.setPeerID(foundPeer.getId());
 				peerinfo.setIp(foundPeer.getPeerIP());

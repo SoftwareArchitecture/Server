@@ -78,13 +78,23 @@ public class SearchManagement {
 			// 3. Send it to Peer
 			// Search For Super Peer
 			System.out.println("Trying to get random superpeer to send the request");
-			Peer foundSuperPeer = getRndSuperPeer();
-			System.out.println("Super Peer with id " + foundSuperPeer.getId() + " found!");
-			if(foundSuperPeer != null) {
+			List<Peer> foundSuperPeers = getRndSuperPeer();
+			System.out.println("Super Peers " + foundSuperPeers.size() + " found!");
+			boolean searchResult = false;
+			if(foundSuperPeers != null) {
 				// Send the SuperPeer Request
-				Fingerprint.getClientInfo().setSessionKey(newHistory.getSessionkey());
-				Fingerprint.getClientInfo().setClientID(foundAcc.getId());
-				boolean searchResult = sendPeerSearchRequest(foundSuperPeer, Fingerprint);
+				for (Peer foundSuperPeer : foundSuperPeers) {
+					Fingerprint.getClientInfo().setSessionKey(newHistory.getSessionkey());
+					Fingerprint.getClientInfo().setClientID(foundAcc.getId());
+					try {
+					searchResult = sendPeerSearchRequest(foundSuperPeer, Fingerprint);
+					} catch (Exception e) {
+						// Deavtivate Superpeer
+						Peer disablePeer = peerdao.findByPeerNumber(foundSuperPeer.getId());
+						disablePeer.setActive(false);
+						peerdao.update(disablePeer);
+					}
+				}
 				
 				//IN FUTURE -> if super peer down update is inactive
 				
@@ -103,15 +113,8 @@ public class SearchManagement {
 		return "";
 	}
 	
-	private static synchronized Peer getRndSuperPeer() {
-		List<Peer> lstSuperPeers = peerdao.getSuperPeers();
-		if( lstSuperPeers.size() != 0) {
-			//Random r = new Random();
-			int rnd = 1 + (int)(Math.random() * ((lstSuperPeers.size() - 1) + 1)); //Min + (int)(Math.random() * ((Max - Min) + 1))
-			System.out.println("RANDOM NUMBER " + rnd + " found!");
-			return lstSuperPeers.get(rnd - 1);
-		}
-		return null;
+	private static synchronized List<Peer> getRndSuperPeer() {
+		return peerdao.getSuperPeers();
 	}
 	
 	private static synchronized boolean sendPeerSearchRequest(Peer peer, FingerprintSearchRequest searchRequest) {
